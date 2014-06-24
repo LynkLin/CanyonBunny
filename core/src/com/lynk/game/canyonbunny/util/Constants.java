@@ -5,8 +5,8 @@ package com.lynk.game.canyonbunny.util;
  */
 public class Constants {
     //Visible game world is 5 meters wide
-    public static final float VIEWPORT_WIDTH = 0.5f;
+    public static final float VIEWPORT_WIDTH = 5f;
 
     //Visible game world is 5 meters tall
-    public static final float VIEWPORT_HEIGHT = 0.5f;
+    public static final float VIEWPORT_HEIGHT = 5f;
 }
