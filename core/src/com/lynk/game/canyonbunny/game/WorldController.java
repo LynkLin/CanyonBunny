@@ -86,8 +86,6 @@ public class WorldController extends InputAdapter {
             //Let the rectangle in the screen
             float randomX = MathUtils.random(-2f + spriteTmp.getOriginX() / MathUtils.sin(45f), 2f - spriteTmp.getOriginX() / MathUtils.sin(45f));
             float randomY = MathUtils.random(-2f + spriteTmp.getOriginY() / MathUtils.sin(45f), 2f - spriteTmp.getOriginY() / MathUtils.sin(45f));
-//            randomX = i;
-//            randomY = 0;
             spriteTmp.setPosition(randomX, randomY);
             //Put into array
             testSprites[i] = spriteTmp;
