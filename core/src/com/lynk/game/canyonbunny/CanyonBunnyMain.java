@@ -3,7 +3,9 @@ package com.lynk.game.canyonbunny;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
+import com.lynk.game.canyonbunny.game.Assets;
 import com.lynk.game.canyonbunny.game.WorldController;
 import com.lynk.game.canyonbunny.game.WorldRenderer;
 
@@ -21,11 +23,11 @@ public class CanyonBunnyMain extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-//		batch = new SpriteBatch();
-//		img = new Texture("badlogic.jpg");
-
         //Set log level
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+        //Load assets
+        Assets.instance.init(new AssetManager());
 
         //Initalize controller and renderer
         worldController = new WorldController();
@@ -64,11 +66,13 @@ public class CanyonBunnyMain extends ApplicationAdapter {
 
     @Override
     public void resume() {
+        Assets.instance.init(new AssetManager());
         paused = false;
     }
 
     @Override
     public void dispose() {
        worldRenderer.dispose();
+        Assets.instance.dispose();
     }
 }
