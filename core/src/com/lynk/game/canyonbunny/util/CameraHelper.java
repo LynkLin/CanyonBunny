@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.lynk.game.canyonbunny.game.objects.AbstractGameObject;
 
 /**
  * Created by lynk on 14-6-25.
@@ -16,7 +17,7 @@ public class CameraHelper {
 
     private Vector2 position;
     private float zoom;
-    private Sprite target;
+    private AbstractGameObject target;
 
     public CameraHelper() {
         this.position = new Vector2();
@@ -43,11 +44,11 @@ public class CameraHelper {
         setZoom(this.zoom + zoom);
     }
 
-    public Sprite getTarget() {
+    public AbstractGameObject getTarget() {
         return target;
     }
 
-    public void setTarget(Sprite target) {
+    public void setTarget(AbstractGameObject target) {
         this.target = target;
     }
 
@@ -55,15 +56,16 @@ public class CameraHelper {
         return this.target != null;
     }
 
-    public boolean hasTarget(Sprite target) {
+    public boolean hasTarget(AbstractGameObject target) {
         return hasTarget() && this.target.equals(target);
     }
 
     public void update(float deltaTime) {
         if(hasTarget()) {
-            position.x = target.getX() + target.getOriginX();
-            position.y = target.getY() + target.getOriginY();
+            return;
         }
+        position.x = target.position.x + target.origin.x;
+        position.y = target.position.y + target.origin.y;
     }
 
     public void applyTo(OrthographicCamera camera) {

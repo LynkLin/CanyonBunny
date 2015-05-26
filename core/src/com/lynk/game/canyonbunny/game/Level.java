@@ -1,11 +1,10 @@
 package com.lynk.game.canyonbunny.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.lynk.game.canyonbunny.game.objects.Clouds;
-import com.lynk.game.canyonbunny.game.objects.Mountains;
-import com.lynk.game.canyonbunny.game.objects.Rock;
-import com.lynk.game.canyonbunny.game.objects.WaterOverlay;
+import com.lynk.game.canyonbunny.game.objects.*;
 
 import java.awt.*;
 
@@ -51,10 +50,74 @@ public class Level {
     }
 
     private void init(String fileName) {
+        rocks = new Array<Rock>();
 
+        //load image file that represents the level data
+        Pixmap pixmap = new Pixmap(Gdx.files.internal(fileName));
+        //scan pixels frm top-left to bottom-right
+        int lastPixel = -1;
+        for (int pixelY = 0; pixelY < pixmap.getHeight(); pixelY++) {
+            for (int pixelX = 0; pixelX < pixmap.getWidth(); pixelX++) {
+                AbstractGameObject obj = null;
+                float offsetHeight = 0;
+                //height grows from bottom to top
+                float baseHeight = pixmap.getHeight() - pixelY;
+                //get color of current pxiel as 32-bit RGBA value
+                int currentPixel = pixmap.getPixel(pixelX, pixelY);
+                //find matching color value to identify block type at (x, y)
+                //point and create the corresponding game object if there is a match
+
+                //empty space
+                if (BLOCK_TYPE.ROCK.sameColor(currentPixel)) {
+                    if (lastPixel != currentPixel) {
+                        obj = new Rock();
+                        float heightIncreaseFactor = 0.25f;
+                        offsetHeight = -2.5f;
+                        obj.position.set(pixelX, baseHeight * obj.dimension.y * heightIncreaseFactor + offsetHeight);
+                        rocks.add((Rock) obj);
+                    } else {
+                        rocks.get(rocks.size - 1).increaseLength(1);
+                    }
+                } else if (BLOCK_TYPE.PLAYER_SPAWN_POINT.sameColor(currentPixel)) {
+                    //player spawn point
+                } else if (BLOCK_TYPE.ITEM_FEATHER.sameColor(currentPixel)) {
+                    //feather
+                } else if (BLOCK_TYPE.ITEM_GOLD_COIN.sameColor(currentPixel)) {
+                    //gold coin
+                } else {
+                    //unknown object/pixel color
+                    int r = 0xff & (currentPixel >>> 24); //red color channel
+                    int g = 0xff & (currentPixel >>> 16); //green color channel
+                    int b = 0xff & (currentPixel >>> 8); //blue color channel
+                    int a = 0xff & currentPixel; //alpha channel
+                    Gdx.app.error(TAG, "Unknown object at x<" + pixelX + "> y<" + pixelY + ">: r<" + r + "> g<" + g + "> b<" + b + "> a<" + a + ">");
+                }
+                lastPixel = currentPixel;
+            }
+        }
+
+        //decoration
+        clouds = new Clouds(pixmap.getWidth());
+        clouds.position.set(0, 2);
+        mountains = new Mountains(pixmap.getWidth());
+        mountains.position.set(-1, -1);
+        waterOverlay = new WaterOverlay(pixmap.getWidth());
+        waterOverlay.position.set(0, -3.75f);
+
+        //free memory
+        pixmap.dispose();
+        Gdx.app.debug(TAG, "Lecel '" + fileName + "' loaded");
     }
 
     public void render(SpriteBatch batch) {
+        mountains.render(batch);
 
+        for (Rock rock: rocks) {
+            rock.render(batch);
+        }
+
+        waterOverlay.render(batch);
+
+        clouds.render(batch);
     }
 }
